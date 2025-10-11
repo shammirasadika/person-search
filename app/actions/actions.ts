@@ -10,12 +10,11 @@ import { prisma } from '@/lib/db'
 export async function searchUsers(query: string): Promise<User[]> {
     console.log('Searching users with query:', query)
     
-    // PostgreSQL supports case-insensitive mode
+    // Database-agnostic search using startsWith for better compatibility
     const results = await prisma.user.findMany({
         where: {
             name: {
-                contains: query,
-                mode: 'insensitive'
+                startsWith: query
             }
         },
         orderBy: {
