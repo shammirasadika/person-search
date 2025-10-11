@@ -10,12 +10,12 @@ import { prisma } from '@/lib/db'
 export async function searchUsers(query: string): Promise<User[]> {
     console.log('Searching users with query:', query)
     
-    // For SQLite, we'll use contains without mode parameter
-    // SQLite's LIKE operator is case-insensitive by default
+    // PostgreSQL supports case-insensitive mode
     const results = await prisma.user.findMany({
         where: {
             name: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
             }
         },
         orderBy: {

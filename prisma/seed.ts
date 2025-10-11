@@ -1,12 +1,14 @@
 import { prisma } from '../lib/db'
 
 async function main() {
-  console.log('Seeding database...')
+  console.log('🌱 Seeding database...')
   
   // Check if users already exist
   const userCount = await prisma.user.count()
   
   if (userCount === 0) {
+    console.log('📊 No users found, creating initial data...')
+    
     const users = [
       { name: 'John Doe', phoneNumber: '0412345678', email: 'john@example.com' },
       { name: 'Jane Smith', phoneNumber: '0423456789', email: 'jane@example.com' },
@@ -20,21 +22,20 @@ async function main() {
       { name: 'Isabella Young', phoneNumber: '0401234567', email: 'isabella@example.com' },
     ]
     
-    for (const user of users) {
-      await prisma.user.create({
-        data: user
-      })
-    }
+    // Use createMany for better performance with PostgreSQL
+    await prisma.user.createMany({
+      data: users
+    })
     
-    console.log('✓ Database seeded successfully')
+    console.log(`✅ Created ${users.length} users successfully`)
   } else {
-    console.log('Database already contains users, skipping seed')
+    console.log(`ℹ️  Database already contains ${userCount} users, skipping seed`)
   }
 }
 
 main()
   .catch((e) => {
-    console.error(e)
+    console.error('❌ Error during seeding:', e)
     process.exit(1)
   })
   .finally(async () => {

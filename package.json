@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "npx tsx prisma/seed.ts"
-  },
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "vercel-build": "prisma generate && prisma migrate deploy && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
