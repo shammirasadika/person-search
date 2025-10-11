@@ -32,7 +32,7 @@ export async function searchUsers(query: string): Promise<User[]> {
     }))
 }
 
-export async function addUser(data: UserFormData): Promise<User> {
+export async function addUser(data: UserFormData): Promise<{ success: boolean; message: string; userId?: string }> {
     console.log('Adding user:', data)
     
     try {
@@ -44,29 +44,34 @@ export async function addUser(data: UserFormData): Promise<User> {
             }
         })
         
-        const validatedUser = userSchema.parse({
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email,
-            phoneNumber: newUser.phoneNumber
-        })
-        
+        console.log('User created successfully:', newUser.id)
         revalidatePath('/')
-        return validatedUser
+        
+        return {
+            success: true,
+            message: `User ${newUser.name} added successfully`,
+            userId: newUser.id
+        }
     } catch (error: unknown) {
         console.error('Error adding user:', error)
         
         // Handle unique constraint violation (email already exists)
         if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
-            throw new Error(`A user with email "${data.email}" already exists`)
+            return {
+                success: false,
+                message: `A user with email "${data.email}" already exists`
+            }
         }
         
         // Handle other database errors
-        throw new Error('Failed to add user. Please try again.')
+        return {
+            success: false,
+            message: 'Failed to add user. Please try again.'
+        }
     }
 }
 
-export async function deleteUser(id: string): Promise<void> {
+export async function deleteUser(id: string): Promise<{ success: boolean; message: string }> {
     console.log('Deleting user with id:', id)
     
     try {
@@ -76,20 +81,31 @@ export async function deleteUser(id: string): Promise<void> {
         
         console.log(`User with id ${id} has been deleted.`)
         revalidatePath('/')
+        
+        return {
+            success: true,
+            message: 'User deleted successfully'
+        }
     } catch (error: unknown) {
         console.error('Error deleting user:', error)
         
         // Handle record not found
         if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
-            throw new Error(`User with id ${id} not found`)
+            return {
+                success: false,
+                message: `User with id ${id} not found`
+            }
         }
         
         // Handle other database errors
-        throw new Error('Failed to delete user. Please try again.')
+        return {
+            success: false,
+            message: 'Failed to delete user. Please try again.'
+        }
     }
 }
 
-export async function updateUser(id: string, data: Partial<UserFormData>): Promise<User> {
+export async function updateUser(id: string, data: Partial<UserFormData>): Promise<{ success: boolean; message: string; user?: User }> {
     console.log('Updating user with id:', id, 'data:', data)
     
     try {
@@ -102,32 +118,45 @@ export async function updateUser(id: string, data: Partial<UserFormData>): Promi
             }
         })
         
-        const validatedUser = userSchema.parse({
+        const validatedUser = {
             id: updatedUser.id,
             name: updatedUser.name,
             email: updatedUser.email,
             phoneNumber: updatedUser.phoneNumber
-        })
+        }
         
         console.log(`User with id ${id} has been updated.`)
         revalidatePath('/')
         
-        return validatedUser
+        return {
+            success: true,
+            message: `User ${updatedUser.name} updated successfully`,
+            user: validatedUser
+        }
     } catch (error: unknown) {
         console.error('Error updating user:', error)
         
         // Handle unique constraint violation (email already exists)
         if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
-            throw new Error(`A user with email "${data.email}" already exists`)
+            return {
+                success: false,
+                message: `A user with email "${data.email}" already exists`
+            }
         }
         
         // Handle record not found
         if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
-            throw new Error(`User with id ${id} not found`)
+            return {
+                success: false,
+                message: `User with id ${id} not found`
+            }
         }
         
         // Handle other database errors
-        throw new Error('Failed to update user. Please try again.')
+        return {
+            success: false,
+            message: 'Failed to update user. Please try again.'
+        }
     }
 }
 
