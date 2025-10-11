@@ -53,11 +53,11 @@ export async function addUser(data: UserFormData): Promise<User> {
         
         revalidatePath('/')
         return validatedUser
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error adding user:', error)
         
         // Handle unique constraint violation (email already exists)
-        if (error.code === 'P2002') {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
             throw new Error(`A user with email "${data.email}" already exists`)
         }
         
@@ -76,11 +76,11 @@ export async function deleteUser(id: string): Promise<void> {
         
         console.log(`User with id ${id} has been deleted.`)
         revalidatePath('/')
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error deleting user:', error)
         
         // Handle record not found
-        if (error.code === 'P2025') {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
             throw new Error(`User with id ${id} not found`)
         }
         
@@ -113,16 +113,16 @@ export async function updateUser(id: string, data: Partial<UserFormData>): Promi
         revalidatePath('/')
         
         return validatedUser
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error updating user:', error)
         
         // Handle unique constraint violation (email already exists)
-        if (error.code === 'P2002') {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
             throw new Error(`A user with email "${data.email}" already exists`)
         }
         
         // Handle record not found
-        if (error.code === 'P2025') {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
             throw new Error(`User with id ${id} not found`)
         }
         
