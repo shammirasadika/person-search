@@ -3,7 +3,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { User, userSchema, UserFormData } from './schemas'
+import { User, UserFormData } from './schemas'
 import { cache } from 'react'
 import { prisma } from '@/lib/db'
 
