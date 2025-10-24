@@ -9,7 +9,7 @@ import {
   listAllUsers as listAllUsersCore,
   userCrudTools
 } from "@/lib/user-crud"
-import type { User, UserFormData } from "./schemas"
+import type { UserFormData } from "./schemas"
 
 // Server action for searching users
 export async function searchUsers(query: string) {
