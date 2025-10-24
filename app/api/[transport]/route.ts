@@ -15,7 +15,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.searchUsers.name,
       userCrudTools.searchUsers.description,
-      userCrudTools.searchUsers.schema,
+      userCrudTools.searchUsers.schema.shape,
       async ({ query }) => {
         try {
           const users = await searchUsersCore(query)
@@ -47,7 +47,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.addUser.name,
       userCrudTools.addUser.description,
-      userCrudTools.addUser.schema,
+      userCrudTools.addUser.schema.shape,
       async ({ name, email, phoneNumber }) => {
         try {
           const user = await addUserCore({ name, email, phoneNumber })
@@ -77,7 +77,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.getUser.name,
       userCrudTools.getUser.description,
-      userCrudTools.getUser.schema,
+      userCrudTools.getUser.schema.shape,
       async ({ id }) => {
         try {
           const user = await getUserByIdCore(id)
@@ -117,7 +117,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.updateUser.name,
       userCrudTools.updateUser.description,
-      userCrudTools.updateUser.schema,
+      userCrudTools.updateUser.schema.shape,
       async ({ id, data }) => {
         try {
           const user = await updateUserCore(id, data)
@@ -147,7 +147,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.deleteUser.name,
       userCrudTools.deleteUser.description,
-      userCrudTools.deleteUser.schema,
+      userCrudTools.deleteUser.schema.shape,
       async ({ id }) => {
         try {
           await deleteUserCore(id)
@@ -177,7 +177,7 @@ const handler = createMcpHandler(
     server.tool(
       userCrudTools.listUsers.name,
       userCrudTools.listUsers.description,
-      userCrudTools.listUsers.schema,
+      userCrudTools.listUsers.schema.shape,
       async () => {
         try {
           const users = await listAllUsersCore()
