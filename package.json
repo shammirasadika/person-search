@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "npx tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
