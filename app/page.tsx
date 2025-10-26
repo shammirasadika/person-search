@@ -1,8 +1,16 @@
 import UserSearch from './components/user-search';
 import { TechnicalOverview } from './components/technical-overview';
 import { UserDialog } from './components/user-dialog';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ userId?: string }> }) {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect('/auth/signin');
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">User Search</h1>

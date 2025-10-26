@@ -1,4 +1,6 @@
 import { createMcpHandler } from "mcp-handler"
+import { auth } from "@/auth"
+import { NextRequest, NextResponse } from "next/server"
 import {
   searchUsers as searchUsersCore,
   addUser as addUserCore,
@@ -220,4 +222,31 @@ const handler = createMcpHandler(
   }
 )
 
-export { handler as GET, handler as POST }
+// OAuth-protected MCP endpoint wrappers
+async function GET(request: NextRequest) {
+  const session = await auth()
+  
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "Unauthorized: Authentication required to access MCP server" },
+      { status: 401 }
+    )
+  }
+
+  return handler(request)
+}
+
+async function POST(request: NextRequest) {
+  const session = await auth()
+  
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "Unauthorized: Authentication required to access MCP server" },
+      { status: 401 }
+    )
+  }
+
+  return handler(request)
+}
+
+export { GET, POST }

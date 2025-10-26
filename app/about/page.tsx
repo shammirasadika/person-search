@@ -11,16 +11,17 @@ function ProjectOverview() {
       </CardHeader>
       <CardContent>
         <p className="mb-4">
-          Person Search is a demonstration project showcasing the power of Next.js, React, and modern web technologies. 
-          It provides a simple yet effective interface for searching and displaying user information.
+          Person Search is a full-stack demonstration project showcasing modern web development with enterprise-grade 
+          OAuth 2.0 authentication. It provides a secure, user-friendly interface for managing and searching user information 
+          with complete CRUD operations.
         </p>
         <p className="mb-4">
-          This project utilizes Next.js 15 with the App Router, React 19, TypeScript, and a variety of 
-          cutting-edge libraries to create a responsive and accessible user experience.
+          This project utilizes Next.js 15 with the App Router, React 19, TypeScript, NextAuth v5 (Auth.js), 
+          PostgreSQL with Prisma ORM, and shadcn/ui components to create a secure, responsive, and accessible user experience.
         </p>
         <p>
-          Key features include asynchronous search functionality, server-side filtering, 
-          and a dark mode toggle for user comfort.
+          Key features include OAuth 2.0 authentication with Google, protected routes and server actions, 
+          asynchronous search functionality, full CRUD operations, MCP server integration, and a dark mode toggle.
         </p>
       </CardContent>
     </Card>
@@ -76,6 +77,77 @@ export default function AboutPage() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">About Person Search</h1>
         <ProjectOverview />
+        
+        {/* Authentication Architecture */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Authentication Architecture</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              Person Search implements enterprise-grade security using <strong>NextAuth v5 (Auth.js)</strong> with 
+              <strong> Google OAuth 2.0</strong> provider. The authentication system protects all user data operations 
+              and ensures only authenticated users can access sensitive features.
+            </p>
+            
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-semibold text-sm mb-1">🔐 OAuth 2.0 Flow</h3>
+                <p className="text-sm text-muted-foreground">
+                  Users sign in with their Google account through a secure OAuth 2.0 flow. No passwords are stored 
+                  in the application, reducing security risks and improving user experience.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-sm mb-1">🛡️ Route Protection</h3>
+                <p className="text-sm text-muted-foreground">
+                  Next.js middleware enforces authentication at the edge, intercepting all requests before they reach 
+                  protected routes. Unauthenticated users are automatically redirected to the sign-in page.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-sm mb-1">⚡ Server Action Security</h3>
+                <p className="text-sm text-muted-foreground">
+                  All CRUD operations (Create, Read, Update, Delete) verify user authentication before execution. 
+                  Server actions use the <code className="bg-muted px-1 rounded text-xs">requireAuth()</code> helper 
+                  to ensure only authenticated users can modify data.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-sm mb-1">🔒 Session Management</h3>
+                <p className="text-sm text-muted-foreground">
+                  Secure HTTP-only cookies store session tokens, preventing client-side JavaScript access. 
+                  Sessions persist across page refreshes and automatically expire after inactivity.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-sm mb-1">🤖 MCP Server Protection (Advanced)</h3>
+                <p className="text-sm text-muted-foreground">
+                  The Model Context Protocol (MCP) server endpoint is OAuth-protected, ensuring AI agent 
+                  communications require authenticated sessions for enterprise-grade security.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/auth-setup">
+                  View OAuth Setup →
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/security">
+                  Security Features →
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <DeveloperInfo />
         <Button asChild variant="link" className="mt-4">
           <Link href="/">
