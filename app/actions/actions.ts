@@ -22,6 +22,15 @@ async function requireAuth() {
     return session
 }
 
+// Helper function to check admin role
+async function requireAdmin() {
+    const session = await requireAuth()
+    if (session.user.role !== 'admin') {
+        throw new Error('Forbidden: Admin access required for this action')
+    }
+    return session
+}
+
 // Re-export functions using shared logic
 export async function searchUsers(query: string): Promise<User[]> {
     await requireAuth() // Check authentication
@@ -32,7 +41,7 @@ export async function searchUsers(query: string): Promise<User[]> {
 }
 
 export async function addUser(data: UserFormData): Promise<User> {
-    await requireAuth() // Check authentication
+    await requireAdmin() // Admin-only action
     console.log('Adding user:', data)
     const user = await addUserCore(data)
     console.log('User created successfully:', user.id)
@@ -40,14 +49,14 @@ export async function addUser(data: UserFormData): Promise<User> {
 }
 
 export async function deleteUser(id: string): Promise<void> {
-    await requireAuth() // Check authentication
+    await requireAdmin() // Admin-only action
     console.log('Deleting user with id:', id)
     await deleteUserCore(id)
     console.log(`User with id ${id} has been deleted.`)
 }
 
 export async function updateUser(id: string, data: Partial<UserFormData>): Promise<User> {
-    await requireAuth() // Check authentication
+    await requireAdmin() // Admin-only action
     console.log('Updating user with id:', id, 'data:', data)
     const user = await updateUserCore(id, data)
     console.log(`User with id ${id} has been updated.`)
